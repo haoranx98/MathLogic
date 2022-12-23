@@ -145,6 +145,7 @@ TreeNode* syntax_tree_to_another(TreeNode* root){
     vector<TreeNode *> clause_node_list;
     vector<TreeNode *> clause_node_pointer_list;
     vector<TreeNode *> clause_list;
+    vector<TreeNode *> eliminate_entailment_and_equivalence_clause_list;
     TreeNode *equ_operator = nullptr;
     TreeNode *left_of_equ = nullptr;
     TreeNode *right_of_equ = nullptr;
@@ -199,6 +200,9 @@ TreeNode* syntax_tree_to_another(TreeNode* root){
 
         }
 
+        eliminate_entailment_and_equivalence_for_syntax_tree(clause_list);
+        de_morgan_for_syntax_tree(clause_list);
+
         TreeNode *new_root = new TreeNode('&');
         new_root -> left = new TreeNode(first_clause_node -> symbol);
         for(auto clause: clause_list){
@@ -210,4 +214,10 @@ TreeNode* syntax_tree_to_another(TreeNode* root){
         root = new_root;
     }
     return root;
+}
+
+void syntax_tree_to_another_for_syntax_tree(std::vector<TreeNode *> &syntax_tree){
+    for(auto & i : syntax_tree){
+        i = syntax_tree_to_another(i);
+    }
 }

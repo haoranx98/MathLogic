@@ -53,7 +53,12 @@ int main() {
     }
 
     cout << "transfer to another tree:" << endl;
-    inorder_traversal(syntax_tree_to_another(syntax_tree[0]));
+    syntax_tree_to_another_for_syntax_tree(syntax_tree);
+    for (auto node: syntax_tree) {
+        inorder_traversal(node);
+        cout << endl;
+    }
+
     return 0;
 }
 

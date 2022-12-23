@@ -14,4 +14,5 @@ void elimnate_repeated_not_for_syntax_tree(std::vector<TreeNode *> &syntax_tree)
 TreeNode* de_morgan(TreeNode* &root);
 void de_morgan_for_syntax_tree(std::vector<TreeNode *> &syntax_tree);
 TreeNode* syntax_tree_to_another(TreeNode* root);
+void syntax_tree_to_another_for_syntax_tree(std::vector<TreeNode *> &syntax_tree);
 #endif //MATHLOGIC_EXPRESSION_PROCESS_H
