@@ -14,7 +14,7 @@ TreeNode::TreeNode()
 TreeNode::TreeNode(char c)
 {
     this->symbol = c;
-    if((c >= 'a' && c <= 'z') || c == '#'){
+    if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '#'){
         this->isOperator = false;
     }
     else{

@@ -10,7 +10,8 @@ using namespace std;
 
 void eliminate_entailment_and_equivalence(TreeNode * &root) {
     if(root == nullptr){
-        return;
+        return;or_and_distributive_law(root -> left);
+                or_and_distributive_law(root -> right);
     }else{
         if(root->symbol=='$'){
             TreeNode* node = new TreeNode('|');
@@ -134,7 +135,7 @@ void de_morgan_for_syntax_tree(std::vector<TreeNode *> &syntax_tree){
 
 bool is_constant(TreeNode *root){
     bool result = false;
-    if(root -> symbol == '#' || root -> symbol == '!' || (root -> symbol <= 'z' && root -> symbol >= 'a')){
+    if(root -> symbol == '#' || root -> symbol == '!' || (root -> symbol <= 'z' && root -> symbol >= 'a') || (root->symbol <= 'Z' && root->symbol >= 'A')){
         result = true;
     }
 
@@ -219,5 +220,61 @@ TreeNode* syntax_tree_to_another(TreeNode* root){
 void syntax_tree_to_another_for_syntax_tree(std::vector<TreeNode *> &syntax_tree){
     for(auto & i : syntax_tree){
         i = syntax_tree_to_another(i);
+    }
+}
+
+void or_and_distributive_law(TreeNode * &root){
+    if(root == nullptr || is_constant(root)){
+        return;
+    }else{
+        if(root -> symbol == '&'){
+            or_and_distributive_law(root -> left);
+            or_and_distributive_law(root -> right);
+        }else {
+            if(root -> left -> symbol == '&' && root -> right -> symbol == '&'){
+                root -> symbol = '&';
+                TreeNode* new_left = new TreeNode('|');
+                TreeNode* new_right = new TreeNode('|');
+                new_left -> left = root -> left -> left;
+                new_left -> right = root -> right;
+                new_right -> left = root -> left -> right;
+                new_right -> right = copy_tree(root -> right);
+
+                delete root -> left;
+
+                root -> left = new_left;
+                root -> right = new_right;
+
+                or_and_distributive_law(root -> left);
+                or_and_distributive_law(root -> right);
+            }else if(root -> left -> symbol == '&'){
+                TreeNode* temp = root -> right;
+                root -> right = root -> left;
+                root -> left = temp;
+                or_and_distributive_law(root);
+            }else if(root -> right -> symbol == '&'){
+                root -> symbol = '&';
+                TreeNode* new_left = new TreeNode('|');
+                TreeNode* new_right = new TreeNode('|');
+                new_left -> left = root -> left;
+                new_left -> right = root -> right -> left;
+                new_right -> left = copy_tree(root -> left);
+                new_right -> right = root -> right -> right;
+                delete root -> right;
+                root -> left = new_left;
+                root -> right = new_right;
+
+                or_and_distributive_law(root -> left);
+                or_and_distributive_law(root -> right);
+            }else{
+                return;
+            }
+        }
+    }
+}
+
+void or_and_distributive_law_for_syntax_tree(std::vector<TreeNode *> &syntax_tree){
+    for(auto &node: syntax_tree){
+        or_and_distributive_law(node);
     }
 }

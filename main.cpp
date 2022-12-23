@@ -35,6 +35,7 @@ int main() {
         cout << endl;
     }
 
+
     cout << "eliminate: " << endl;
 
     eliminate_entailment_and_equivalence_for_syntax_tree(syntax_tree);
@@ -55,6 +56,13 @@ int main() {
     cout << "transfer to another tree:" << endl;
     syntax_tree_to_another_for_syntax_tree(syntax_tree);
     for (auto node: syntax_tree) {
+        inorder_traversal(node);
+        cout << endl;
+    }
+
+    cout << "or and distribute:" << endl;
+    or_and_distributive_law_for_syntax_tree(syntax_tree);
+    for (TreeNode *node: syntax_tree){
         inorder_traversal(node);
         cout << endl;
     }
