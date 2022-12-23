@@ -53,7 +53,7 @@ void eliminate_entailment_and_equivalence(TreeNode * &root) {
     }
 }
 
-void eliminate_entailment_and_equivalence_for_syntax_tree(std::vector<TreeNode *> &syntax_tree){
+void eliminate_entailment_and_equivalence(std::vector<TreeNode *> &syntax_tree){
     for (auto & i : syntax_tree) {
         eliminate_entailment_and_equivalence(i);
     }
@@ -201,7 +201,7 @@ TreeNode* syntax_tree_to_another(TreeNode* root){
 
         }
 
-        eliminate_entailment_and_equivalence_for_syntax_tree(clause_list);
+        eliminate_entailment_and_equivalence(clause_list);
         de_morgan_for_syntax_tree(clause_list);
 
         TreeNode *new_root = new TreeNode('&');
@@ -273,7 +273,7 @@ void or_and_distributive_law(TreeNode * &root){
     }
 }
 
-void or_and_distributive_law_for_syntax_tree(std::vector<TreeNode *> &syntax_tree){
+void or_and_distributive_law(std::vector<TreeNode *> &syntax_tree){
     for(auto &node: syntax_tree){
         or_and_distributive_law(node);
     }
