@@ -6,6 +6,8 @@
 #include "TreeNode.h"
 #include "iostream"
 
+using namespace std;
+
 void eliminate_entailment_and_equivalence(TreeNode * &root) {
     if(root == nullptr){
         return;
@@ -130,3 +132,82 @@ void de_morgan_for_syntax_tree(std::vector<TreeNode *> &syntax_tree){
     }
 }
 
+bool is_constant(TreeNode *root){
+    bool result = false;
+    if(root -> symbol == '#' || root -> symbol == '!' || (root -> symbol <= 'z' && root -> symbol >= 'a')){
+        result = true;
+    }
+
+    return result;
+}
+
+TreeNode* syntax_tree_to_another(TreeNode* root){
+    vector<TreeNode *> clause_node_list;
+    vector<TreeNode *> clause_node_pointer_list;
+    vector<TreeNode *> clause_list;
+    TreeNode *equ_operator = nullptr;
+    TreeNode *left_of_equ = nullptr;
+    TreeNode *right_of_equ = nullptr;
+    TreeNode *left_of_right_of_equ = nullptr;
+    TreeNode *right_of_right_of_equ = nullptr;
+    TreeNode *first_clause_node = nullptr;
+    TreeNode *temp = nullptr;
+    int j = 0;
+    if(!is_constant(root)){
+        first_clause_node = new TreeNode('A');
+        clause_node_list.push_back(first_clause_node);
+        clause_node_pointer_list.push_back(root);
+        while(j < clause_node_list.size()){
+            equ_operator = new TreeNode('=');
+            left_of_equ = clause_node_list[j];
+            right_of_equ = new TreeNode(root -> symbol);
+            if(is_constant(root -> left)){
+                left_of_right_of_equ = copy_tree(root -> left);
+
+                if(is_constant(root -> right)){
+                    right_of_right_of_equ = copy_tree(root -> right);
+                }else{
+                    TreeNode *new_clause_node = new TreeNode('A' + clause_node_list.size());
+                    clause_node_list.push_back(new_clause_node);
+                    clause_node_pointer_list.push_back(root -> right);
+                    right_of_right_of_equ = new_clause_node;
+                }
+            }else{
+                TreeNode *new_left_clause_node = new TreeNode('A' + clause_node_list.size());
+                clause_node_list.push_back(new_left_clause_node);
+                clause_node_pointer_list.push_back(root -> left);
+                left_of_right_of_equ = new_left_clause_node;
+
+                if(is_constant(root->right)){
+                    right_of_right_of_equ = copy_tree(root -> right);
+                }else{
+                    TreeNode *new_right_clause_node = new TreeNode('A' + clause_node_list.size());
+                    clause_node_list.push_back(new_right_clause_node);
+                    clause_node_pointer_list.push_back(root -> right);
+                    right_of_right_of_equ = new_right_clause_node;
+                }
+            }
+            equ_operator -> left = left_of_equ;
+            right_of_equ -> left = left_of_right_of_equ;
+            right_of_equ -> right = right_of_right_of_equ;
+            equ_operator -> right = right_of_equ;
+            clause_list.push_back(equ_operator);
+            if(j + 1 < clause_node_list.size()){
+                root = clause_node_pointer_list[j+1];
+            }
+            j++;
+
+        }
+
+        TreeNode *new_root = new TreeNode('&');
+        new_root -> left = new TreeNode(first_clause_node -> symbol);
+        for(auto clause: clause_list){
+            new_root->right = clause;
+            temp = new_root;
+            new_root = new TreeNode('&');
+            new_root -> left = temp;
+        }
+        root = new_root;
+    }
+    return root;
+}
