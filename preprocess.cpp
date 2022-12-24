@@ -137,3 +137,13 @@ void polish_formula_to_syntax_tree(vector<string> polish_formula_list, vector<Tr
         tree_node_stack.pop();
     }
 }
+
+void write_output_file(string filename, vector<string> three_CNF_list){
+    ofstream output_file;
+    output_file.open(filename);
+
+    for(auto three_CNF: three_CNF_list){
+        output_file << three_CNF << endl;
+    }
+    output_file.close();
+}

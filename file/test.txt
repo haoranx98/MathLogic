@@ -1,5 +1,12 @@
+(a&b)|c
 ((a$b)|!((!a=c)&d))&!b
 (a|b|c|d|e)&(b|c|d|e|f)&(c|d|e|f|g)
 ((a$b)$(c$d))$((a$c)$(b$d))
-
-
+(p&q)=n
+!((p&q)|n)$(r&m)
+!(!(p&q))
+a&b
+a|b
+(b&c)|a
+(a&b)|(c&d)
+a|(b&c)

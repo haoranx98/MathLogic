@@ -206,11 +206,14 @@ TreeNode* syntax_tree_to_another(TreeNode* root){
 
         TreeNode *new_root = new TreeNode('&');
         new_root -> left = new TreeNode(first_clause_node -> symbol);
-        for(auto clause: clause_list){
-            new_root->right = clause;
+        for (int i = 0; i < clause_list.size(); ++i){
+            new_root->right = clause_list[i];
             temp = new_root;
-            new_root = new TreeNode('&');
-            new_root -> left = temp;
+
+            if(i != clause_list.size() - 1){
+                new_root = new TreeNode('&');
+                new_root -> left = temp;
+            }
         }
         root = new_root;
     }
@@ -276,5 +279,38 @@ void or_and_distributive_law(TreeNode * &root){
 void or_and_distributive_law(std::vector<TreeNode *> &syntax_tree){
     for(auto &node: syntax_tree){
         or_and_distributive_law(node);
+    }
+}
+
+string syntax_tree_to_string(TreeNode *root){
+    string result = "";
+    if(root != nullptr) {
+        if((root -> symbol <= 'z' && root -> symbol >= 'a') || (root -> symbol <= 'Z' && root -> symbol >= 'A') ){
+            result = root -> symbol;
+        }else if(root -> symbol == '!'){
+            string not_operator = "!";
+            not_operator.push_back(root -> right -> symbol);
+            result = not_operator;
+        }else if(root -> symbol == '|'){
+            result = syntax_tree_to_string(root -> left) + '|' + syntax_tree_to_string(root -> right);
+        }else{
+            if(root -> left -> symbol == '|' && root -> right != nullptr && root -> right -> symbol == '|'){
+                result = '(' + syntax_tree_to_string(root -> left) + ')' + '&' + '(' + syntax_tree_to_string(root -> right) + ')';
+            }else if(root -> left -> symbol == '|'){
+                result = '(' + syntax_tree_to_string(root -> left) + ')' + '&' + syntax_tree_to_string(root -> right);
+            }else if(root -> right != nullptr && root -> right -> symbol == '|'){
+                result = syntax_tree_to_string(root -> left) + '&' + '(' + syntax_tree_to_string(root -> right) + ')';
+            }else{
+                result = syntax_tree_to_string(root -> left) + '&' + syntax_tree_to_string(root -> right);
+            }
+        }
+
+        return result;
+    }
+}
+
+void syntax_tree_to_string_for_every_syntax_tree(vector<TreeNode *> syntax_tree, vector<string> &three_CNF_list){
+    for(auto node: syntax_tree){
+        three_CNF_list.push_back(syntax_tree_to_string(node));
     }
 }
